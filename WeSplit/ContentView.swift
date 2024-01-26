@@ -13,6 +13,8 @@ struct ContentView: View {
     @State private var tipPercentage = 20
     @FocusState private var amountIfFocused: Bool
     
+    @State private var redColor = false
+    
     private let tipPercentages = [10, 15, 20, 25, 0]
     
     var totalPerPerson: Double {
@@ -26,7 +28,7 @@ struct ContentView: View {
     
     var totalAmount: Double {
         let tipSelection = Double(tipPercentage)
-        
+                
         let tipValue = checkAmount / 100 * tipSelection
         let grandTotal = checkAmount + tipValue
         
@@ -47,8 +49,6 @@ struct ContentView: View {
                         }
                     }
                     .pickerStyle(.navigationLink)
-                    
-                    
                 }
                 
                 Section("How much do you want to tip?") {
@@ -58,11 +58,15 @@ struct ContentView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .onChange(of: tipPercentage) {
+                        redColor = tipPercentage == 0
+                    }
                 }
                 
                 
                 Section("Total amount + tip") {
                     Text(totalAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                        .foregroundColor(redColor ? .red : .primary)
                 }
                 
                 
